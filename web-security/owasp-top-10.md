@@ -6,6 +6,12 @@ OWASP Top 10 is a list of the most critical security risks found in web applicat
 
 OWASP Top 10 सबसे खतरनाक web security risks की list है, जो applications में आमतौर पर पाए जाते हैं।
 
+```mermaid
+flowchart LR
+A[User Input] --> B[Application]
+B --> C[Database]
+A -->|Malicious Input| C
+```
 ---
 
 ## 🔟 OWASP Top 10 (2021)
