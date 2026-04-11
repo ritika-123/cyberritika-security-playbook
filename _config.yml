@@ -1,3 +1,22 @@
 title: Cybersecurity Playbook by CYBERRITIKA
 description: Free Cybersecurity Learning Hub for Beginners
 theme: jekyll-theme-NAME
+
+nav:
+  - name: Home
+    link: /
+  - name: Fundamentals
+    link: /fundamentals/risk
+    link: /fundamentals/cia-triad
+  - name: Playbooks
+    link: /playbooks/risk-assessment
+  - name: Resources
+    link: /resources/courses
+    link: /resources/certifications
+    link: /resources/tools
+    link: /resources/labs
+  - name: Roadmap
+    link: /roadmap/beginner
+    link: /roadmap/intermediate
+    link: /roadmap/advanced
+    
