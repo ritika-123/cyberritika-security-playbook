@@ -1,6 +1,6 @@
 # 🔑 Authentication in Cybersecurity
 
-## 📌 What is Authentication?
+## 📌 What is Authentication? 
 
 Authentication is the process of verifying that a person is really who they claim to be before giving access to a system.
 
