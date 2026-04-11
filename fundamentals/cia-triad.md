@@ -6,6 +6,13 @@ The CIA Triad is a simple model that explains what cybersecurity is trying to pr
 
 CIA Triad का मतलब है, data को सुरक्षित रखना, सही रखना और ज़रूरत पड़ने पर उपलब्ध रखना।
 
+```mermaid
+flowchart TD
+A[CIA TRIAD] --> B[Confidentiality]
+A --> C[Integrity]
+A --> D[Availability]
+```
+
 ---
 
 ## 🔐 Confidentiality
@@ -54,4 +61,6 @@ Explain concepts using real-life situations, it shows practical understanding.
 
 - CIA Triad is the foundation of cybersecurity  
 - It focuses on privacy, accuracy, and accessibility  
-- Most real-world issues map to one of these three  
+- Most real-world issues map to one of these three
+
+---
