@@ -106,3 +106,77 @@ body {
       font-size: 14px;
       color: #94a3b8;
     }
+
+
+/* =========================
+   MARKDOWN GLOBAL STYLING
+========================= */
+
+#content {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+  text-align: left;
+  line-height: 1.7;
+  color: #e2e8f0;
+}
+
+/* HEADINGS */
+#content h1 {
+  font-size: 32px;
+  margin-top: 20px;
+  color: #38bdf8;
+}
+
+#content h2 {
+  font-size: 26px;
+  margin-top: 20px;
+  color: #60a5fa;
+}
+
+#content h3 {
+  font-size: 20px;
+  color: #93c5fd;
+}
+
+/* PARAGRAPHS */
+#content p {
+  margin: 10px 0;
+  color: #cbd5e1;
+}
+
+/* LINKS */
+#content a {
+  color: #38bdf8;
+  text-decoration: underline;
+}
+
+/* LISTS */
+#content ul {
+  padding-left: 20px;
+}
+
+#content li {
+  margin: 6px 0;
+}
+
+/* CODE BLOCKS */
+#content pre {
+  background: #0f172a;
+  padding: 15px;
+  border-radius: 10px;
+  overflow-x: auto;
+  border: 1px solid #334155;
+}
+
+#content code {
+  color: #f8fafc;
+}
+
+/* BLOCKQUOTE (IMPORTANT FOR NOTES) */
+#content blockquote {
+  border-left: 4px solid #38bdf8;
+  padding-left: 10px;
+  color: #94a3b8;
+  margin: 10px 0;
+}
