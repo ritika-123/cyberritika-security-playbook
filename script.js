@@ -5,37 +5,82 @@ async function loadMarkdown(filePath, targetId) {
   const res = await fetch(filePath);
   const md = await res.text();
 
-  // Convert markdown
   target.innerHTML = marked.parse(md);
 
-  // WAIT for DOM update
-  setTimeout(() => {
+  // Immediately trigger observer (no guessing timing)
+  observeAndRenderMermaid(target);
+}
 
-    // Find all code blocks
-    document.querySelectorAll("pre code").forEach((block) => {
 
-      const text = block.textContent || "";
+// ===============================
+// GUARANTEED MERMAID RENDERER
+// ===============================
+function observeAndRenderMermaid(container) {
 
-      // detect mermaid
-      if (text.includes("flowchart") || text.includes("graph")) {
+  if (!container) return;
 
-        const div = document.createElement("div");
-        div.className = "mermaid";
+  const observer = new MutationObserver(() => {
 
-        // CLEAN markdown fences
-        div.textContent = text
-          .replace(/```mermaid/g, "")
-          .replace(/```/g, "")
-          .trim();
+    convertMermaidBlocks(container);
+    renderMermaid(container);
 
-        block.parentElement.replaceWith(div);
-      }
-    });
+  });
 
-    // RENDER ALL DIAGRAMS
-    if (window.mermaid) {
-      mermaid.init(undefined, document.querySelectorAll(".mermaid"));
+  observer.observe(container, {
+    childList: true,
+    subtree: true
+  });
+
+  // also run once immediately
+  convertMermaidBlocks(container);
+  renderMermaid(container);
+}
+
+
+// ===============================
+// CONVERT <pre><code> → .mermaid
+// ===============================
+function convertMermaidBlocks(container) {
+
+  container.querySelectorAll("pre code").forEach((block) => {
+
+    const text = block.textContent || "";
+
+    const isMermaid =
+      text.includes("flowchart") ||
+      text.includes("graph") ||
+      text.includes("sequenceDiagram");
+
+    if (isMermaid) {
+
+      const div = document.createElement("div");
+      div.className = "mermaid";
+
+      div.textContent = text
+        .replace(/```mermaid/g, "")
+        .replace(/```/g, "")
+        .trim();
+
+      block.parentElement.replaceWith(div);
     }
+  });
+}
 
-  }, 50);
+
+// ===============================
+// SAFE MERMAID RENDER
+// ===============================
+function renderMermaid(container) {
+
+  if (typeof mermaid === "undefined") return;
+
+  const elements = container.querySelectorAll(".mermaid");
+
+  if (elements.length > 0) {
+    try {
+      mermaid.init(undefined, elements);
+    } catch (e) {
+      console.error("Mermaid error:", e);
+    }
+  }
 }
