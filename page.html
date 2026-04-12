@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Playbook Viewer</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+  <script>
+    mermaid.initialize({ startOnLoad: false });
+  </script>
+</head>
+
+<body>
+
+<div id="content"></div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const file = params.get("file");
+
+async function load() {
+
+  const res = await fetch(file);
+  const md = await res.text();
+
+  document.getElementById("content").innerHTML = marked.parse(md);
+
+  setTimeout(() => {
+
+    document.querySelectorAll("pre code").forEach(block => {
+
+      const text = block.textContent || "";
+
+      if (text.includes("flowchart") || text.includes("graph")) {
+
+        const div = document.createElement("div");
+        div.className = "mermaid";
+
+        div.textContent = text
+          .replace(/```mermaid/g, "")
+          .replace(/```/g, "")
+          .trim();
+
+        block.parentElement.replaceWith(div);
+      }
+    });
+
+    mermaid.init(undefined, document.querySelectorAll(".mermaid"));
+
+  }, 50);
+}
+
+load();
+</script>
+
+</body>
+</html>
