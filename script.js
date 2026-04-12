@@ -1,3 +1,4 @@
+
 async function loadMarkdown(filePath, targetId) {
 
   const target = document.getElementById(targetId);
@@ -5,53 +6,35 @@ async function loadMarkdown(filePath, targetId) {
   const res = await fetch(filePath);
   const md = await res.text();
 
+  // STEP 1: inject markdown
   target.innerHTML = marked.parse(md);
 
-  // Immediately trigger observer (no guessing timing)
-  observeAndRenderMermaid(target);
+  // STEP 2: wait for FULL browser paint (important fix)
+  requestAnimationFrame(() => {
+
+    setTimeout(() => {
+
+      convertMermaid(target);
+      renderMermaid(target);
+
+    }, 0);
+
+  });
 }
 
 
-// ===============================
-// GUARANTEED MERMAID RENDERER
-// ===============================
-function observeAndRenderMermaid(container) {
+// ============================
+// CONVERT BLOCKS SAFELY
+// ============================
+function convertMermaid(container) {
 
-  if (!container) return;
+  const blocks = container.querySelectorAll("pre code");
 
-  const observer = new MutationObserver(() => {
-
-    convertMermaidBlocks(container);
-    renderMermaid(container);
-
-  });
-
-  observer.observe(container, {
-    childList: true,
-    subtree: true
-  });
-
-  // also run once immediately
-  convertMermaidBlocks(container);
-  renderMermaid(container);
-}
-
-
-// ===============================
-// CONVERT <pre><code> → .mermaid
-// ===============================
-function convertMermaidBlocks(container) {
-
-  container.querySelectorAll("pre code").forEach((block) => {
+  blocks.forEach(block => {
 
     const text = block.textContent || "";
 
-    const isMermaid =
-      text.includes("flowchart") ||
-      text.includes("graph") ||
-      text.includes("sequenceDiagram");
-
-    if (isMermaid) {
+    if (text.includes("flowchart") || text.includes("graph")) {
 
       const div = document.createElement("div");
       div.className = "mermaid";
@@ -67,20 +50,16 @@ function convertMermaidBlocks(container) {
 }
 
 
-// ===============================
+// ============================
 // SAFE MERMAID RENDER
-// ===============================
+// ============================
 function renderMermaid(container) {
 
-  if (typeof mermaid === "undefined") return;
+  if (!window.mermaid) return;
 
-  const elements = container.querySelectorAll(".mermaid");
+  const nodes = container.querySelectorAll(".mermaid");
 
-  if (elements.length > 0) {
-    try {
-      mermaid.init(undefined, elements);
-    } catch (e) {
-      console.error("Mermaid error:", e);
-    }
+  if (nodes.length > 0) {
+    mermaid.init(undefined, nodes);
   }
 }
