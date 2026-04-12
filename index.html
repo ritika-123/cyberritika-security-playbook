@@ -114,8 +114,17 @@ document.getElementById("search").addEventListener("input", function () {
 });
 </script>
 
+<!-- Markdown renderer -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
+<!-- Mermaid library -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
 <script src="script.js"></script>
+
+<!-- Initialize Mermaid -->
+<script>
+  mermaid.initialize({ startOnLoad: false });
+</script>
 </body>
 </html>
