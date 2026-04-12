@@ -23,19 +23,25 @@
       z-index: 1000;
     }
 
+    /* NAV BAR */
     nav {
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
+      align-items: center;
       background: #1e293b;
-      padding: 10px;
+      padding: 10px 20px;
       position: sticky;
       top: 60px;
       z-index: 999;
     }
 
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+
     nav a {
       color: white;
-      margin: 0 15px;
       text-decoration: none;
       font-size: 16px;
       cursor: pointer;
@@ -45,20 +51,15 @@
       color: #38bdf8;
     }
 
-    /* NEW: search bar */
-    .search-wrapper {
-      display: flex;
-      justify-content: flex-end;
-      padding: 10px 20px;
-    }
-    
+    /* SEARCH IN NAV */
     .search-wrapper input {
-      padding: 10px;
-      width: 280px;
+      padding: 8px 12px;
+      width: 220px;
       border-radius: 8px;
       border: none;
       outline: none;
     }
+
     .hero {
       text-align: center;
       padding: 60px 20px;
@@ -111,39 +112,6 @@
       font-size: 14px;
       color: #94a3b8;
     }
-
-    /* NEW: Light mode */
-    .light {
-      background: #f1f5f9;
-      color: #0f172a;
-    }
-
-    .light header,
-    .light nav,
-    .light footer {
-      background: #e2e8f0;
-      color: #0f172a;
-    }
-
-    .light .card {
-      background: #cbd5e1;
-    }
-
-    .light .card:hover {
-      background: #94a3b8;
-    }
-
-    .toggle-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #38bdf8;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 50px;
-      cursor: pointer;
-      font-weight: bold;
-    }
   </style>
 </head>
 
@@ -153,24 +121,29 @@
   🚀 Cybersecurity Playbook
 </header>
 
+<!-- NAVBAR WITH SEARCH ON RIGHT -->
 <nav>
-  <a href="#fundamentals">Fundamentals</a>
-  <a href="#playbooks">Playbooks</a>
+
+  <div class="nav-links">
+    <a href="#fundamentals">Fundamentals</a>
+    <a href="#playbooks">Playbooks</a>
+  </div>
+
+  <div class="search-wrapper">
+    <input type="text" id="search" placeholder="Search topics..." />
+  </div>
+
 </nav>
 
 <div class="hero">
   <h1>Learn Cybersecurity the Right Way</h1>
   <p>For Beginners, Interviews, and CISSP Preparation</p>
 </div>
-<!-- NEW: Search --> 
-<div class="search-wrapper">
-  <input type="text" id="search" placeholder="Search topics like IAM, Risk, Incident..." />
-</div>
-  
+
 <div class="section" id="fundamentals">
   <h2>📘 Fundamentals</h2>
 
-  <div class="cards" id="fundamentalsCards">
+  <div class="cards">
     <div class="card"><a href="fundamentals/cia-triad.html">CIA Triad</a></div>
     <div class="card"><a href="fundamentals/authentication.html">Authentication</a></div>
     <div class="card"><a href="fundamentals/authorization.html">Authorization</a></div>
@@ -182,7 +155,7 @@
 <div class="section" id="playbooks">
   <h2>🛡️ Playbooks</h2>
 
-  <div class="cards" id="playbookCards">
+  <div class="cards">
     <div class="card"><a href="playbooks/incident-response.html">Incident Response</a></div>
   </div>
 </div>
@@ -191,17 +164,7 @@
   Built by Ritika Chaurasia 🚀 | Cybersecurity Learning Platform
 </footer>
 
-<!-- NEW: Theme Button -->
-<button class="toggle-btn" onclick="toggleTheme()">🌙</button>
-
 <script>
-/* -----------------------------
-   DARK MODE
-------------------------------*/
-function toggleTheme() {
-  document.body.classList.toggle("light");
-}
-
 /* -----------------------------
    SEARCH FILTER
 ------------------------------*/
