@@ -5,29 +5,37 @@ async function loadMarkdown(filePath, targetId) {
   const res = await fetch(filePath);
   const md = await res.text();
 
-  // 1. Convert markdown to HTML
+  // Convert markdown
   target.innerHTML = marked.parse(md);
 
-  // 2. IMPORTANT FIX: wait DOM update
+  // WAIT for DOM update
   setTimeout(() => {
 
+    // Find all code blocks
     document.querySelectorAll("pre code").forEach((block) => {
 
-      const text = block.textContent;
+      const text = block.textContent || "";
 
       // detect mermaid
       if (text.includes("flowchart") || text.includes("graph")) {
 
         const div = document.createElement("div");
         div.className = "mermaid";
-        div.textContent = text.replace(/```mermaid|```/g, "");
+
+        // CLEAN markdown fences
+        div.textContent = text
+          .replace(/```mermaid/g, "")
+          .replace(/```/g, "")
+          .trim();
 
         block.parentElement.replaceWith(div);
       }
     });
 
-    // 3. render all diagrams
-    mermaid.init(undefined, document.querySelectorAll(".mermaid"));
+    // RENDER ALL DIAGRAMS
+    if (window.mermaid) {
+      mermaid.init(undefined, document.querySelectorAll(".mermaid"));
+    }
 
-  }, 100);
+  }, 50);
 }
