@@ -1,5 +1,11 @@
+
+// INIT MERMAID
 mermaid.initialize({ startOnLoad: false });
 
+
+// =========================
+// LOAD MARKDOWN
+// =========================
 async function loadMarkdown(filePath, targetId) {
 
   const res = await fetch(filePath);
@@ -7,30 +13,51 @@ async function loadMarkdown(filePath, targetId) {
 
   const target = document.getElementById(targetId);
 
-  // Convert markdown → HTML
+  // STEP 1: Markdown → HTML
   target.innerHTML = marked.parse(md);
 
-  // Fix Mermaid
+  // STEP 2: Wait for DOM update (CRITICAL)
   setTimeout(() => {
-    renderMermaid(target);
-  }, 100);
+    processMermaid(target);
+  }, 50);
 }
 
-function renderMermaid(container) {
 
-  container.querySelectorAll("pre code").forEach((block) => {
+// =========================
+// MERMAID PROCESSOR (ROBUST)
+// =========================
+function processMermaid(container) {
+
+  // Find all code blocks
+  const blocks = container.querySelectorAll("pre code");
+
+  blocks.forEach((block) => {
 
     const text = block.textContent || "";
 
-    if (/^\s*(flowchart|graph|sequenceDiagram)/m.test(text)) {
+    // STRICT detection (IMPORTANT FIX)
+    const isMermaid =
+      /^\s*(flowchart|graph|sequenceDiagram|classDiagram)/m.test(text);
+
+    if (isMermaid) {
 
       const div = document.createElement("div");
       div.className = "mermaid";
-      div.textContent = text.trim();
+
+      // Clean markdown fences
+      div.textContent = text
+        .replace(/```mermaid/g, "")
+        .replace(/```/g, "")
+        .trim();
 
       block.parentElement.replaceWith(div);
     }
   });
 
-  mermaid.init(undefined, container.querySelectorAll(".mermaid"));
+  // FORCE RENDER
+  const diagrams = container.querySelectorAll(".mermaid");
+
+  if (diagrams.length > 0) {
+    mermaid.init(undefined, diagrams);
+  }
 }
