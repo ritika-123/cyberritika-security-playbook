@@ -1,0 +1,290 @@
+html<!DOCTYPE html>
+<html>
+<head>
+  <title>Cybersecurity YouTube Learning Hub</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+    }
+
+    header {
+      text-align: center;
+      padding: 20px;
+      background: #020617;
+    }
+
+    a.back {
+      color: #38bdf8;
+      text-decoration: none;
+      margin: 10px 20px;
+      display: inline-block;
+    }
+
+    .search {
+      text-align: center;
+      padding: 10px;
+    }
+
+    .search input {
+      padding: 10px;
+      width: 320px;
+      border-radius: 8px;
+      border: none;
+    }
+
+    .bar {
+      width: 100%;
+      height: 6px;
+      background: #1f2937;
+    }
+
+    .fill {
+      height: 6px;
+      width: 0%;
+      background: #38bdf8;
+    }
+
+    h2 {
+      padding: 10px 20px;
+      color: #38bdf8;
+      margin-top: 30px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 15px;
+      padding: 20px;
+    }
+
+    .card {
+      background: #1e293b;
+      padding: 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      position: relative;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+      background: #334155;
+    }
+
+    .card.done {
+      border: 2px solid #22c55e;
+    }
+
+    .badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #22c55e;
+      padding: 4px 8px;
+      font-size: 12px;
+      border-radius: 6px;
+      display: none;
+    }
+
+    .card.done .badge {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  📺 Cybersecurity Complete Learning Hub (50+ Resources)
+</header>
+
+<a class="back" href="../index.html">⬅ Back to Home</a>
+
+<div class="bar"><div class="fill" id="fill"></div></div>
+
+<div class="search">
+  <input type="text" id="search" placeholder="Search topics..." />
+</div>
+
+<!-- CONTENT WILL RENDER HERE -->
+<div id="content"></div>
+
+<script>
+/* =========================
+   DATA STRUCTURE (50+ ITEMS)
+========================= */
+
+const sections = [
+  {
+    title: "🔰 Beginner Cybersecurity",
+    items: [
+      ["NetworkChuck - Cybersecurity Basics", "https://youtube.com/@NetworkChuck"],
+      ["freeCodeCamp Cybersecurity Full Course", "https://youtube.com/@freecodecamp"],
+      ["HackerSploit Intro Series", "https://youtube.com/@HackerSploit"],
+      ["IBM Cybersecurity Basics", "https://youtube.com/@IBM"],
+      ["Simplilearn Cybersecurity", "https://youtube.com/@SimplilearnOfficial"],
+      ["Great Learning Cybersecurity", "https://youtube.com/@GreatLearning"],
+      ["Edureka Cybersecurity", "https://youtube.com/@edurekaIN"],
+      ["Cybrary Basics", "https://www.cybrary.it"]
+    ]
+  },
+
+  {
+    title: "🛡️ Pentesting / Red Team",
+    items: [
+      ["IppSec HTB Walkthroughs", "https://youtube.com/@ippsec"],
+      ["LiveOverflow Hacking", "https://youtube.com/@LiveOverflow"],
+      ["STÖK Bug Bounty", "https://youtube.com/@STOKfredrik"],
+      ["John Hammond", "https://youtube.com/@_JohnHammond"],
+      ["The Cyber Mentor", "https://youtube.com/@TCMSecurityAcademy"],
+      ["InsiderPhD", "https://youtube.com/@InsiderPhD"],
+      ["Null Byte", "https://youtube.com/@NullByteWHT"],
+      ["David Bombal Pentesting", "https://youtube.com/@davidbombal"]
+    ]
+  },
+
+  {
+    title: "🔵 Blue Team / SOC / Defense",
+    items: [
+      ["Blue Team Labs", "https://youtube.com/@BlueTeamLabs"],
+      ["SANS Institute", "https://youtube.com/@SANSInstitute"],
+      ["IBM Security", "https://youtube.com/@IBM"],
+      ["Splunk Tutorials", "https://www.youtube.com/@splunk"],
+      ["Security Blue Team", "https://securityblue.team"],
+      ["Defensive Security Podcast", "https://www.youtube.com"]
+    ]
+  },
+
+  {
+    title: "🌐 Computer Networks (Must for Cybersecurity)",
+    items: [
+      ["Gate Smashers Networking (Hindi)", "https://youtube.com/@GateSmashers"],
+      ["Neso Academy Networks", "https://youtube.com/@nesoacademy"],
+      ["NetworkChuck Networking", "https://youtube.com/@NetworkChuck"],
+      ["FreeCodeCamp Networking Full Course", "https://youtube.com/@freecodecamp"],
+      ["David Bombal CCNA", "https://youtube.com/@davidbombal"]
+    ]
+  },
+
+  {
+    title: "🐧 Linux & Operating Systems",
+    items: [
+      ["Linux Basics - freeCodeCamp", "https://youtube.com/@freecodecamp"],
+      ["Learn Linux - NetworkChuck", "https://youtube.com/@NetworkChuck"],
+      ["Derek Banas Linux", "https://youtube.com/@derekbanas"],
+      ["ProgrammingKnowledge Linux", "https://youtube.com/@ProgrammingKnowledge"],
+      ["Neso Academy OS", "https://youtube.com/@nesoacademy"]
+    ]
+  },
+
+  {
+    title: "🎓 Computer Science Foundations",
+    items: [
+      ["CS50 Harvard (Must Watch)", "https://youtube.com/@cs50"],
+      ["MIT OpenCourseWare", "https://youtube.com/@mitocw"],
+      ["Jenny's Lectures OS", "https://youtube.com/@JennyslecturesCSIT"],
+      ["Gate Smashers OS/DBMS", "https://youtube.com/@GateSmashers"],
+      ["Neso Academy DBMS", "https://youtube.com/@nesoacademy"]
+    ]
+  },
+
+  {
+    title: "🇮🇳 Hindi Cybersecurity Channels",
+    items: [
+      ["CodeWithHarry Cybersecurity", "https://youtube.com/@CodeWithHarry"],
+      ["Geeky Shows", "https://youtube.com/@GeekyShows"],
+      ["Apna College Tech", "https://youtube.com/@ApnaCollegeOfficial"],
+      ["MySirG", "https://youtube.com/@mysirg"],
+      ["Gate Smashers", "https://youtube.com/@GateSmashers"]
+    ]
+  }
+];
+
+/* =========================
+   PROGRESS STORAGE
+========================= */
+
+let watched = JSON.parse(localStorage.getItem("ytprogress")) || [];
+
+/* =========================
+   RENDER
+========================= */
+
+const content = document.getElementById("content");
+const fill = document.getElementById("fill");
+
+function render(filter="") {
+  content.innerHTML = "";
+
+  sections.forEach((sec, sIndex) => {
+
+    let sectionHTML = `<h2>${sec.title}</h2><div class="grid">`;
+
+    sec.items.forEach((item, i) => {
+      const id = sIndex + "-" + i;
+
+      if (filter && !item[0].toLowerCase().includes(filter)) return;
+
+      const done = watched.includes(id);
+
+      sectionHTML += `
+        <div class="card ${done ? "done" : ""}" onclick="toggle('${id}','${item[1]}')">
+          <div class="badge">✔ Watched</div>
+          <h3>${item[0]}</h3>
+          <p>Open YouTube</p>
+        </div>
+      `;
+    });
+
+    sectionHTML += `</div>`;
+    content.innerHTML += sectionHTML;
+  });
+
+  updateProgress();
+}
+
+/* =========================
+   TOGGLE WATCH
+========================= */
+
+function toggle(id, url) {
+  window.open(url, "_blank");
+
+  if (watched.includes(id)) {
+    watched = watched.filter(x => x !== id);
+  } else {
+    watched.push(id);
+  }
+
+  localStorage.setItem("ytprogress", JSON.stringify(watched));
+  render(document.getElementById("search").value.toLowerCase());
+}
+
+/* =========================
+   PROGRESS BAR
+========================= */
+
+function updateProgress() {
+  const total = sections.reduce((a,b)=>a+b.items.length,0);
+  const percent = (watched.length / total) * 100;
+  fill.style.width = percent + "%";
+}
+
+/* =========================
+   SEARCH
+========================= */
+
+document.getElementById("search").addEventListener("input", e => {
+  render(e.target.value.toLowerCase());
+});
+
+/* INIT */
+render();
+</script>
+
+</body>
+</html>
