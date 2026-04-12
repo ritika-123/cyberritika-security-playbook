@@ -7,6 +7,8 @@ Authentication is the process of verifying that a person is really who they clai
 Authentication का मतलब है किसी व्यक्ति की पहचान को verify करना।
 
 ![Authentication Flow](/cyberritika-security-playbook/assets/images/authentication.png)
+
+![Authentication Flow](../assets/images/authentication.png)
 ---
 
 ## 🔐 How Authentication Works
