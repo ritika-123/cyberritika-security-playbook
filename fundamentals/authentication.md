@@ -6,12 +6,7 @@ Authentication is the process of verifying that a person is really who they clai
 
 Authentication का मतलब है किसी व्यक्ति की पहचान को verify करना।
 
-```mermaid
-flowchart LR
-A[User enters credentials] --> B{Valid?}
-B -->|Yes| C[Access Granted]
-B -->|No| D[Access Denied]
-```
+![Authentication Flow](/assets/images/authentication.png)
 ---
 
 ## 🔐 How Authentication Works
