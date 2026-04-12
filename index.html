@@ -119,44 +119,5 @@ document.getElementById("search").addEventListener("input", function () {
   mermaid.initialize({ startOnLoad: false });
 </script>
 <script src="script.js"></script>
-
-<script>
-  mermaid.initialize({ startOnLoad: false });
-</script>
-  <script>
-/*
- GLOBAL MERMAID AUTO FIX
- Runs AFTER every markdown load
- Works for ALL .md files automatically
-*/
-
-function renderAllMermaidOnPage() {
-
-  if (typeof mermaid === "undefined") return;
-
-  const blocks = document.querySelectorAll(".mermaid");
-
-  if (blocks.length > 0) {
-    try {
-      mermaid.init(undefined, blocks);
-    } catch (e) {
-      console.error("Mermaid render failed:", e);
-    }
-  }
-}
-
-/*
- Hook into ANY markdown rendering
- We watch DOM changes globally
-*/
-const observer = new MutationObserver(() => {
-  renderAllMermaidOnPage();
-});
-
-observer.observe(document.body, {
-  childList: true,
-  subtree: true
-});
-</script>
 </body>
 </html>
