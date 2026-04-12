@@ -1,11 +1,5 @@
-
-// INIT MERMAID
 mermaid.initialize({ startOnLoad: false });
 
-
-// =========================
-// MAIN LOADER
-// =========================
 async function loadMarkdown(filePath, targetId) {
 
   const res = await fetch(filePath);
@@ -13,54 +7,30 @@ async function loadMarkdown(filePath, targetId) {
 
   const target = document.getElementById(targetId);
 
-  // STEP 1: convert markdown → HTML
-  const html = marked.parse(md);
-  target.innerHTML = html;
+  // Convert markdown → HTML
+  target.innerHTML = marked.parse(md);
 
-  // STEP 2: wait DOM update (IMPORTANT)
+  // Fix Mermaid
   setTimeout(() => {
-    convertAndRenderMermaid(target);
+    renderMermaid(target);
   }, 100);
 }
 
+function renderMermaid(container) {
 
-// =========================
-// CORE FIX (ROBUST)
-// =========================
-function convertAndRenderMermaid(container) {
-
-  // 1. Find ALL code blocks
-  const codeBlocks = container.querySelectorAll("pre code");
-
-  codeBlocks.forEach((block) => {
+  container.querySelectorAll("pre code").forEach((block) => {
 
     const text = block.textContent || "";
 
-    // STRICT detection (IMPORTANT FIX)
-    const isMermaid =
-      /^\s*(flowchart|graph|sequenceDiagram|classDiagram)/m.test(text);
-
-    if (isMermaid) {
+    if (/^\s*(flowchart|graph|sequenceDiagram)/m.test(text)) {
 
       const div = document.createElement("div");
       div.className = "mermaid";
-
-      // Clean markdown fences safely
-      const clean = text
-        .replace(/```mermaid/g, "")
-        .replace(/```/g, "")
-        .trim();
-
-      div.textContent = clean;
+      div.textContent = text.trim();
 
       block.parentElement.replaceWith(div);
     }
   });
 
-  // 2. FORCE Mermaid render
-  const diagrams = container.querySelectorAll(".mermaid");
-
-  if (diagrams.length > 0) {
-    mermaid.init(undefined, diagrams);
-  }
+  mermaid.init(undefined, container.querySelectorAll(".mermaid"));
 }
