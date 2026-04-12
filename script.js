@@ -1,29 +1,63 @@
-mermaid.initialize({ startOnLoad: false });
+// ================================
+// MARKDOWN RENDER FUNCTION
+// ================================
 
-function renderMarkdown(md, target) {
+function renderMarkdown(md, targetId) {
+  const target = document.getElementById(targetId);
+
+  // Convert markdown → HTML
   target.innerHTML = marked.parse(md);
 
-  // Wait for DOM update
+  // Fix mermaid after rendering
   setTimeout(() => {
-    convertMermaidBlocks();
-  }, 50);
+    renderMermaid();
+  }, 100);
 }
 
-function convertMermaidBlocks() {
 
-  document.querySelectorAll("pre code").forEach((block) => {
+// ================================
+// MERMAID FIX (IMPORTANT PART)
+// ================================
 
-    if (block.className.includes("language-mermaid")) {
+function renderMermaid() {
+  const blocks = document.querySelectorAll("pre code");
 
-      const parent = block.parentElement;
+  blocks.forEach((block) => {
+    const text = block.textContent;
 
+    // Detect mermaid content
+    if (
+      block.className.includes("language-mermaid") ||
+      text.includes("flowchart") ||
+      text.includes("graph LR") ||
+      text.includes("graph TD")
+    ) {
       const div = document.createElement("div");
       div.className = "mermaid";
-      div.innerHTML = block.textContent;
 
-      parent.replaceWith(div);
+      // Clean code block
+      div.innerHTML = text
+        .replace(/```mermaid/g, "")
+        .replace(/```/g, "")
+        .trim();
+
+      // Replace code block with diagram container
+      block.parentElement.replaceWith(div);
     }
   });
 
+  // Render diagrams
   mermaid.init(undefined, document.querySelectorAll(".mermaid"));
+}
+
+
+// ================================
+// LOAD MARKDOWN FILES
+// ================================
+
+async function loadMarkdown(filePath, targetId) {
+  const res = await fetch(filePath);
+  const md = await res.text();
+
+  renderMarkdown(md, targetId);
 }
