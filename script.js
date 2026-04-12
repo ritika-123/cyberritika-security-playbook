@@ -1,93 +1,85 @@
 
-// ===============================
-// MAIN MARKDOWN LOADER (PER PAGE)
-// ===============================
-async function loadMarkdown(filePath, targetId) {
+// INIT MERMAID (IMPORTANT)
+mermaid.initialize({ startOnLoad: false });
 
-  const res = await fetch(filePath);
-  const md = await res.text();
+
+// =========================
+// LOAD MARKDOWN
+// =========================
+async function loadMarkdown(filePath, targetId) {
 
   const target = document.getElementById(targetId);
 
-  // STEP 1: extract flowcharts BEFORE markdown render
-  const { cleanMarkdown, flowcharts } = extractMermaid(md);
+  if (!target) {
+    console.error("Target not found:", targetId);
+    return;
+  }
 
-  // STEP 2: render markdown normally
-  target.innerHTML = marked.parse(cleanMarkdown);
+  try {
+    const res = await fetch(filePath);
+    const md = await res.text();
 
-  // STEP 3: render flowcharts INSIDE SAME PAGE
-  renderFlowcharts(flowcharts, target);
+    // STEP 1: convert markdown → HTML
+    target.innerHTML = marked.parse(md);
+
+    // STEP 2: delay to ensure DOM is ready
+    setTimeout(() => {
+      fixAndRenderMermaid(target);
+    }, 50);
+
+  } catch (err) {
+    console.error("Markdown load failed:", err);
+    target.innerHTML = "Error loading file: " + filePath;
+  }
 }
 
 
-// ===============================
-// EXTRACT MERMAID BLOCKS
-// ===============================
-function extractMermaid(md) {
+// =========================
+// MERMAID FIX (CORE LOGIC)
+// =========================
+function fixAndRenderMermaid(container) {
 
-  const regex = /```mermaid([\s\S]*?)```/g;
+  if (!container) return;
 
-  let flowcharts = [];
+  const codeBlocks = container.querySelectorAll("pre code");
 
-  let cleanMarkdown = md.replace(regex, (match, code) => {
-    flowcharts.push(code.trim());
-    return ""; // remove from markdown output
+  let mermaidBlocks = [];
+
+  codeBlocks.forEach((block) => {
+
+    const text = block.textContent || "";
+
+    // STRICT detection of mermaid
+    const isMermaid =
+      text.includes("flowchart") ||
+      text.includes("graph TD") ||
+      text.includes("graph LR") ||
+      text.includes("sequenceDiagram");
+
+    if (isMermaid) {
+
+      const clean = text
+        .replace(/```mermaid/g, "")
+        .replace(/```/g, "")
+        .trim();
+
+      const div = document.createElement("div");
+      div.className = "mermaid";
+      div.textContent = clean;
+
+      block.parentElement.replaceWith(div);
+
+      mermaidBlocks.push(div);
+    }
   });
 
-  return { cleanMarkdown, flowcharts };
-}
+  // IMPORTANT: render ONLY if found
+  if (mermaidBlocks.length > 0) {
 
-
-// ===============================
-// RENDER FLOWCHARTS IN SAME PAGE
-// ===============================
-function renderFlowcharts(flowcharts, container) {
-
-  if (!flowcharts.length) return;
-
-  const wrapper = document.createElement("div");
-  wrapper.style.marginTop = "30px";
-
-  flowcharts.forEach((chart, i) => {
-
-    const box = document.createElement("div");
-    box.style.margin = "20px 0";
-    box.style.padding = "15px";
-    box.style.borderRadius = "10px";
-    box.style.background = "#0f172a";
-    box.style.border = "1px solid #334155";
-
-    const title = document.createElement("h3");
-    title.innerText = "📊 Flowchart " + (i + 1);
-    title.style.color = "#38bdf8";
-
-    const pre = document.createElement("pre");
-    pre.style.whiteSpace = "pre-wrap";
-    pre.style.color = "#ffffff";
-    pre.style.fontSize = "14px";
-
-    // Convert Mermaid → readable structured flow
-    pre.textContent = formatFlow(chart);
-
-    box.appendChild(title);
-    box.appendChild(pre);
-    wrapper.appendChild(box);
-  });
-
-  container.appendChild(wrapper);
-}
-
-
-// ===============================
-// FLOW FORMATTER (SAFE DISPLAY)
-// ===============================
-function formatFlow(text) {
-
-  return text
-    .replace(/flowchart TD/g, "FLOW: Top Down")
-    .replace(/flowchart LR/g, "FLOW: Left to Right")
-    .replace(/-->/g, " → ")
-    .replace(/\[|\]/g, "")
-    .replace(/\{|\}/g, "")
-    .trim();
+    try {
+      mermaid.init(undefined, mermaidBlocks);
+    } catch (e) {
+      console.error("Mermaid render error:", e);
+    }
+  }
 }
