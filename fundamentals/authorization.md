@@ -83,14 +83,9 @@ Government classified systems.
 
 ## 📊 Authorization Flow
 
-```mermaid
-flowchart LR
-A[User Authenticated] --> B[Check Permissions]
-B --> C{Allowed?}
-C -->|Yes| D[Access Granted]
-C -->|No| E[Access Denied]
-```
+![Authorization Flow](../assets/images/authorization.png)
 
+---
 ## ⚠️ Common Issues
 
 - Excessive permissions  
