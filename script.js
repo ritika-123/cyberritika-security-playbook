@@ -3,21 +3,25 @@ mermaid.initialize({ startOnLoad: false });
 function renderMarkdown(md, target) {
   target.innerHTML = marked.parse(md);
 
+  // Wait for DOM update
   setTimeout(() => {
-    fixMermaidBlocks();
-  }, 0);
+    convertMermaidBlocks();
+  }, 50);
 }
 
-function fixMermaidBlocks() {
-  document.querySelectorAll("code").forEach((el) => {
+function convertMermaidBlocks() {
 
-    if (el.className.includes("language-mermaid")) {
+  document.querySelectorAll("pre code").forEach((block) => {
+
+    if (block.className.includes("language-mermaid")) {
+
+      const parent = block.parentElement;
 
       const div = document.createElement("div");
       div.className = "mermaid";
-      div.innerHTML = el.textContent;
+      div.innerHTML = block.textContent;
 
-      el.parentElement.replaceWith(div);
+      parent.replaceWith(div);
     }
   });
 
