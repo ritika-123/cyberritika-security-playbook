@@ -15,14 +15,8 @@ Risk exists when three elements are present together:
 
 If any one of these is missing, risk is significantly reduced.
 
-```mermaid
-flowchart TD
-A[Asset, valuable data or system] --> B[Threat attempts attack]
-B --> C{Is vulnerability present?}
-C -->|Yes| D[Risk occurs]
-C -->|No| E[No Risk]
-D --> F[Impact, financial loss, data breach]
-```
+## Risk Flow
+![Risk Flow](../assets/images/risk.png)
 ---
 
 ## 🧠 Understanding Risk Through a Real Scenario
