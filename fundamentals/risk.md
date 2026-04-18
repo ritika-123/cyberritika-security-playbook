@@ -17,6 +17,7 @@ If any one of these is missing, risk is significantly reduced.
 
 ## Risk Flow
 ![Risk Flow](../assets/images/risk.png)
+
 ---
 
 ## 🧠 Understanding Risk Through a Real Scenario
